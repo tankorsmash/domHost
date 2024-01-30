@@ -6,3 +6,11 @@ It will eventually allow you to search a lobby, and it will play a sound when yo
 
 ![Screenshot](screenshots/screenshot.png)
 
+
+---
+
+
+### Note
+
+Not yet working! It doesn't fetch from the server, and only parses a local html file.
+
