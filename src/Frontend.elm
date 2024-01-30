@@ -77,24 +77,6 @@ updateFromBackend msg model =
 
 view : Model -> Browser.Document FrontendMsg
 view model =
-    let
-        bootstrapStyleTag =
-            Html.node "link"
-                [ Html.Attributes.rel "stylesheet"
-                , Html.Attributes.href "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-                , Html.Attributes.attribute "integrity" "sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-                , Html.Attributes.attribute "crossorigin" "anonymous"
-                ]
-                []
-
-        bootstrapScriptTag =
-            Html.node "script"
-                [ Html.Attributes.src "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-                , Html.Attributes.attribute "integrity" "sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-                , Html.Attributes.attribute "crossorigin" "anonymous"
-                ]
-                []
-    in
     if not model.okayToRender then
         { title = ""
         , body = [ Html.text "Loading..." ]
