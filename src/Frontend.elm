@@ -97,8 +97,7 @@ view model =
             [ Html.div
                 [ class "container"
                 ]
-                [ Html.h3 [] <| [ Html.text "Hello, Lamdera!" ]
-                , Html.div [] <| [ Html.text "How are you?" ]
+                [ Html.h3 [] <| [ Html.text "Dominions 6: Lobby Status" ]
                 , Html.div [ class "container" ] <|
                     case maybeNationRows of
                         Just nationRows ->
