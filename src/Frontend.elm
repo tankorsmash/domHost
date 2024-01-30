@@ -4,13 +4,13 @@ import Browser exposing (UrlRequest(..))
 import Browser.Events exposing (onAnimationFrameDelta)
 import Browser.Navigation as Nav
 import Color
+import GamePageParser exposing (NationStatusRow, parsedGamePage)
 import Html exposing (Html, div)
 import Html.Attributes exposing (class, style)
 import Lamdera
 import Process
 import Task
 import Types exposing (..)
-import GamePageParser exposing (parsedGamePage)
 import Url
 
 
@@ -72,6 +72,14 @@ updateFromBackend msg model =
             ( model, Cmd.none )
 
 
+renderNationRow : NationStatusRow -> Html msg
+renderNationRow nationRow =
+    Html.div [ class "row" ] <|
+        [ Html.div [ class "col" ] [ Html.text nationRow.name ]
+        , Html.div [ class "col" ] [ Html.text nationRow.value ]
+        ]
+
+
 view : Model -> Browser.Document FrontendMsg
 view model =
     if not model.okayToRender then
@@ -81,8 +89,8 @@ view model =
 
     else
         let
-            _ =
-               Debug.log "parsed from Frontend" parsedGamePage
+            maybeNationRows =
+                Debug.log "parsed from Frontend" parsedGamePage
         in
         { title = ""
         , body =
@@ -91,6 +99,13 @@ view model =
                 ]
                 [ Html.h3 [] <| [ Html.text "Hello, Lamdera!" ]
                 , Html.div [] <| [ Html.text "How are you?" ]
+                , Html.div [ class "container" ] <|
+                    case maybeNationRows of
+                        Just nationRows ->
+                            List.map renderNationRow nationRows
+
+                        Nothing ->
+                            [ Html.text "No nation rows" ]
                 ]
             ]
         }
