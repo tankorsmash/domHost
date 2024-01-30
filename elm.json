@@ -11,7 +11,9 @@
             "elm/core": "1.0.5",
             "elm/html": "1.0.0",
             "elm/http": "2.0.0",
+            "elm/parser": "1.1.0",
             "elm/url": "1.0.0",
+            "hecrj/html-parser": "2.4.0",
             "joakin/elm-canvas": "4.0.0",
             "justgook/elm-image": "5.0.0",
             "lamdera/codecs": "1.0.0",
@@ -25,7 +27,8 @@
             "elm/time": "1.0.0",
             "elm/virtual-dom": "1.0.3",
             "elm-community/list-extra": "8.7.0",
-            "folkertdev/elm-flate": "2.0.5"
+            "folkertdev/elm-flate": "2.0.5",
+            "rtfeldman/elm-hex": "1.0.0"
         }
     },
     "test-dependencies": {

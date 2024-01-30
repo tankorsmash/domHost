@@ -3,10 +3,6 @@ module Frontend exposing (..)
 import Browser exposing (UrlRequest(..))
 import Browser.Events exposing (onAnimationFrameDelta)
 import Browser.Navigation as Nav
-import Canvas
-import Canvas.Settings
-import Canvas.Settings.Advanced
-import Canvas.Settings.Text
 import Color
 import Html exposing (Html, div)
 import Html.Attributes exposing (class, style)
@@ -14,6 +10,7 @@ import Lamdera
 import Process
 import Task
 import Types exposing (..)
+import GamePageParser exposing (parsedGamePage)
 import Url
 
 
@@ -85,7 +82,7 @@ view model =
     else
         let
             _ =
-                Debug.log "view" 123
+               Debug.log "parsed from Frontend" parsedGamePage
         in
         { title = ""
         , body =
