@@ -2,13 +2,14 @@ module Types exposing (..)
 
 import Browser exposing (UrlRequest)
 import Browser.Navigation exposing (Key)
+import Http
 import Url exposing (Url)
 
 
 type alias FrontendModel =
     { key : Key
     , message : String
-    , okayToRender : Bool
+    , gameName : String
     }
 
 
@@ -21,7 +22,13 @@ type FrontendMsg
     = UrlClicked UrlRequest
     | UrlChanged Url
     | NoOpFrontendMsg
-    | OkToRender
+    | ChangedGameName String
+    | SearchGameName
+    | GotDom6Page (Result Http.Error String)
+
+
+
+-- | OkToRender
 
 
 type ToBackend

@@ -6,7 +6,9 @@ import Browser.Navigation as Nav
 import Color
 import GamePageParser exposing (NationStatusRow, parsedGamePage)
 import Html exposing (Html, div)
-import Html.Attributes exposing (class, style)
+import Html.Attributes as HA exposing (class, style, value)
+import Html.Events as HE exposing (onInput)
+import Http
 import Lamdera
 import Process
 import Task
@@ -34,9 +36,9 @@ init : Url.Url -> Nav.Key -> ( Model, Cmd FrontendMsg )
 init url key =
     ( { key = key
       , message = "Welcome to Lamdera! You're looking at the auto-generated base implementation. Check out src/Frontend.elm to start coding!"
-      , okayToRender = False
+      , gameName = "WhoNeedsJ"
       }
-    , Process.sleep 1 |> Task.perform (always OkToRender)
+    , Cmd.none
     )
 
 
@@ -61,8 +63,26 @@ update msg model =
         NoOpFrontendMsg ->
             ( model, Cmd.none )
 
-        OkToRender ->
-            ( { model | okayToRender = True }, Cmd.none )
+        GotDom6Page text ->
+            ( model, Cmd.none )
+
+        ChangedGameName newGameName ->
+            ( { model | gameName = Debug.log "newgamename" newGameName }, Cmd.none )
+
+        SearchGameName ->
+            ( model
+            , Http.get
+                { url = "http://localhost:8080/gameName"
+                , expect =
+                    Http.expectString
+                        GotDom6Page
+                }
+            )
+
+
+
+-- OkToRender ->
+--     ( { model | okayToRender = True }, Cmd.none )
 
 
 updateFromBackend : ToFrontend -> Model -> ( Model, Cmd FrontendMsg )
@@ -82,29 +102,38 @@ renderNationRow nationRow =
 
 view : Model -> Browser.Document FrontendMsg
 view model =
-    if not model.okayToRender then
-        { title = ""
-        , body = [ Html.text "Loading..." ]
-        }
-
-    else
-        let
-            maybeNationRows =
-                Debug.log "parsed from Frontend" parsedGamePage
-        in
-        { title = ""
-        , body =
-            [ Html.div
-                [ class "container"
-                ]
-                [ Html.h3 [] <| [ Html.text "Dominions 6: Lobby Status" ]
-                , Html.div [ class "container" ] <|
-                    case maybeNationRows of
-                        Just nationRows ->
-                            List.map renderNationRow nationRows
-
-                        Nothing ->
-                            [ Html.text "No nation rows" ]
-                ]
+    -- if not model.okayToRender then
+    --     { title = ""
+    --     , body = [ Html.text "Loading..." ]
+    --     }
+    --
+    -- else
+    let
+        maybeNationRows =
+            Debug.log "parsed from Frontend" parsedGamePage
+    in
+    { title = ""
+    , body =
+        [ Html.div
+            [ class "container"
             ]
-        }
+            [ Html.h3 [] <| [ Html.text "Dominions 6: Lobby Status" ]
+            , Html.form [ class "input-group mb-3", HE.onSubmit SearchGameName ]
+                [ Html.span [ class "input-group-text" ] [ Html.text "Lobby name" ]
+                , Html.input [ class "form-control", HA.type_ "text", value model.gameName, HE.onInput ChangedGameName ] []
+                , Html.button [ class "btn btn-outline-secondary", HA.type_ "button", HE.onClick SearchGameName ] [ Html.text "Search" ]
+                ]
+            , Html.div [ class "row" ] <|
+                [ Html.div [ class "col" ] [ Html.text "Nation" ]
+                , Html.div [ class "col" ] [ Html.text "Status" ]
+                ]
+            , Html.div [ class "" ] <|
+                case maybeNationRows of
+                    Just nationRows ->
+                        List.map renderNationRow nationRows
+
+                    Nothing ->
+                        [ Html.text "No nation rows" ]
+            ]
+        ]
+    }
