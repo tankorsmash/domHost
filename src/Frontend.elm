@@ -38,6 +38,7 @@ init url key =
     ( { key = key
       , message = "Welcome to Lamdera! You're looking at the auto-generated base implementation. Check out src/Frontend.elm to start coding!"
       , gameName = "WhoNeedsJ"
+      , gameError = Nothing
       , nationRows = []
       }
     , Cmd.none
@@ -86,13 +87,26 @@ updateFromBackend msg model =
                 Ok maybeParsed ->
                     case maybeParsed of
                         Just parsedRows ->
-                            ( { model | nationRows = parsedRows }, Cmd.none )
+                            ( { model
+                                | nationRows = parsedRows
+                                , gameError = Nothing
+                              }
+                            , Cmd.none
+                            )
 
                         Nothing ->
-                            ( model, Cmd.none )
+                            ( { model | nationRows = [], gameError = Just "game found but no rows" }, Cmd.none )
 
                 Err err ->
-                    ( model, Cmd.none )
+                    ( { model
+                        | nationRows = []
+                        , gameError =
+                            "Could not find game: "
+                                ++ model.gameName
+                                |> Just
+                      }
+                    , Cmd.none
+                    )
 
 
 renderNationRow : NationStatusRow -> Html msg
@@ -126,17 +140,19 @@ view model =
                 , Html.input [ class "form-control", HA.type_ "text", value model.gameName, HE.onInput ChangedGameName ] []
                 , Html.button [ class "btn btn-outline-secondary", HA.type_ "button", HE.onClick SearchGameName ] [ Html.text "Search" ]
                 ]
+            , Html.div [ class "text-danger" ] <|
+                case model.gameError of
+                    Just err ->
+                        [ Html.text err ]
+
+                    Nothing ->
+                        []
             , Html.div [ class "row" ] <|
                 [ Html.div [ class "col" ] [ Html.text "Nation" ]
                 , Html.div [ class "col" ] [ Html.text "Status" ]
                 ]
             , Html.div [ class "" ] <|
-                -- case model.nationRows of
-                --     Just nationRows ->
                 List.map renderNationRow model.nationRows
-
-            -- Nothing ->
-            -- [ Html.text "No nation rows" ]
             ]
         ]
     }

@@ -10,12 +10,16 @@ import Url exposing (Url)
 type alias NationStatusRow =
     { name : String, value : String }
 
-type alias  ParsedNationRows= List NationStatusRow
+
+type alias ParsedNationRows =
+    List NationStatusRow
+
 
 type alias FrontendModel =
     { key : Key
     , message : String
     , gameName : String
+    , gameError : Maybe String
     , nationRows : List NationStatusRow
     }
 
