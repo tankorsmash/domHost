@@ -66,24 +66,13 @@ update msg model =
             ( model, Cmd.none )
 
         ChangedGameName newGameName ->
-            ( { model | gameName = Debug.log "newgamename" newGameName }, Cmd.none )
+            ( { model | gameName = newGameName }, Cmd.none )
 
         SearchGameName ->
             ( model
             , Lamdera.sendToBackend <|
                 ToBackendRequestGamePage model.gameName
-              -- , Http.get
-              --     { url = "http://ulm.illwinter.com/dom6/server/" ++ model.gameName ++ ".html"
-              --     , expect =
-              --         Http.expectString
-              --             GotDom6Page
-              --     }
             )
-
-
-
--- OkToRender ->
---     ( { model | okayToRender = True }, Cmd.none )
 
 
 updateFromBackend : ToFrontend -> Model -> ( Model, Cmd FrontendMsg )
@@ -123,7 +112,8 @@ view model =
     --
     -- else
     let
-        maybeNationRows =123
+        maybeNationRows =
+            123
     in
     { title = ""
     , body =
@@ -143,10 +133,10 @@ view model =
             , Html.div [ class "" ] <|
                 -- case model.nationRows of
                 --     Just nationRows ->
-                        List.map renderNationRow model.nationRows
+                List.map renderNationRow model.nationRows
 
-                    -- Nothing ->
-                        -- [ Html.text "No nation rows" ]
+            -- Nothing ->
+            -- [ Html.text "No nation rows" ]
             ]
         ]
     }

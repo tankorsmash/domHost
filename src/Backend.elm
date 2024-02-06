@@ -38,19 +38,6 @@ update msg model =
 
 
 
--- BackendGotDom6Page  clientId result  ->
---     case result of
---         Ok maybeRows ->
---             let
---                 parsedPage =
---                     parseGamePage maybeRows
---             in
---             ( model, sendToFrontend clientId<| ToFrontendGotDom6Page parsedPage )
---         Err err ->
---             -- ( model, sendToFrontend clientId<| ToFrontendGotDom6PageParseError err )
---             ( model, Cmd.none )
-
-
 updateFromFrontend : SessionId -> ClientId -> ToBackend -> Model -> ( Model, Cmd BackendMsg )
 updateFromFrontend sessionId clientId msg model =
     case msg of
