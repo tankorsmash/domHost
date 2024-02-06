@@ -17,7 +17,7 @@ type alias ParsedNationRows =
 
 type alias FrontendModel =
     { key : Key
-    , message : String
+    , dummy : String
     , gameName : String
     , gameError : Maybe String
     , nationRows : List NationStatusRow
