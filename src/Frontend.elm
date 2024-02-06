@@ -1,7 +1,5 @@
 module Frontend exposing (..)
 
-import SamplePage
-
 import Browser exposing (UrlRequest(..))
 import Browser.Events exposing (onAnimationFrameDelta)
 import Browser.Navigation as Nav
@@ -13,6 +11,7 @@ import Html.Events as HE exposing (onInput)
 import Http
 import Lamdera
 import Process
+import SamplePage
 import Task
 import Types exposing (..)
 import Url
@@ -74,15 +73,14 @@ update msg model =
 
         SearchGameName ->
             ( model
-            ,
-            Lamdera.sendToBackend <|
+            , Lamdera.sendToBackend <|
                 ToBackendRequestGamePage model.gameName
-            -- , Http.get
-            --     { url = "http://ulm.illwinter.com/dom6/server/" ++ model.gameName ++ ".html"
-            --     , expect =
-            --         Http.expectString
-            --             GotDom6Page
-            --     }
+              -- , Http.get
+              --     { url = "http://ulm.illwinter.com/dom6/server/" ++ model.gameName ++ ".html"
+              --     , expect =
+              --         Http.expectString
+              --             GotDom6Page
+              --     }
             )
 
 
@@ -98,7 +96,17 @@ updateFromBackend msg model =
             ( model, Cmd.none )
 
         ToFrontendGotDom6Page pageResult ->
-            Debug.todo "branch 'ToFrontendGotDom6Page _' not implemented"
+            case pageResult of
+                Ok maybeParsed ->
+                    case maybeParsed of
+                        Just parsedRows ->
+                            ( { model | nationRows = parsedRows }, Cmd.none )
+
+                        Nothing ->
+                            ( model, Cmd.none )
+
+                Err err ->
+                    ( model, Cmd.none )
 
 
 renderNationRow : NationStatusRow -> Html msg
@@ -118,8 +126,7 @@ view model =
     --
     -- else
     let
-        maybeNationRows =
-            Debug.log "parsed from Frontend" <| parseGamePage SamplePage.rawSamplePage
+        maybeNationRows =123
     in
     { title = ""
     , body =
@@ -137,12 +144,12 @@ view model =
                 , Html.div [ class "col" ] [ Html.text "Status" ]
                 ]
             , Html.div [ class "" ] <|
-                case maybeNationRows of
-                    Just nationRows ->
-                        List.map renderNationRow nationRows
+                -- case model.nationRows of
+                --     Just nationRows ->
+                        List.map renderNationRow model.nationRows
 
-                    Nothing ->
-                        [ Html.text "No nation rows" ]
+                    -- Nothing ->
+                        -- [ Html.text "No nation rows" ]
             ]
         ]
     }
