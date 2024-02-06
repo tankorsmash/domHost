@@ -15,7 +15,7 @@ type alias NationStatusRow =
 
 type alias FrontendModel =
     { key : Browser.Navigation.Key
-    , message : String
+    , dummy : String
     , gameName : String
     , gameError : Maybe String
     , nationRows : List NationStatusRow
