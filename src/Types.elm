@@ -3,13 +3,19 @@ module Types exposing (..)
 import Browser exposing (UrlRequest)
 import Browser.Navigation exposing (Key)
 import Http
+import Lamdera exposing (ClientId)
 import Url exposing (Url)
+
+
+type alias NationStatusRow =
+    { name : String, value : String }
 
 
 type alias FrontendModel =
     { key : Key
     , message : String
     , gameName : String
+    , nationRows : List NationStatusRow
     }
 
 
@@ -33,11 +39,14 @@ type FrontendMsg
 
 type ToBackend
     = NoOpToBackend
+    | ToBackendRequestGamePage String
 
 
 type BackendMsg
     = NoOpBackendMsg
+    | BackendGotDom6Page ClientId (Result Http.Error String)
 
 
 type ToFrontend
     = NoOpToFrontend
+    | ToFrontendGotDom6Page (Result Http.Error String)

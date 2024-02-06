@@ -1,7 +1,8 @@
 module Backend exposing (..)
 
 import Html
-import Lamdera exposing (ClientId, SessionId)
+import Http
+import Lamdera exposing (ClientId, SessionId, sendToFrontend)
 import Types exposing (..)
 
 
@@ -31,9 +32,24 @@ update msg model =
         NoOpBackendMsg ->
             ( model, Cmd.none )
 
+        BackendGotDom6Page  clientId result  ->
+            (model, sendToFrontend clientId<| ToFrontendGotDom6Page result)
+
 
 updateFromFrontend : SessionId -> ClientId -> ToBackend -> Model -> ( Model, Cmd BackendMsg )
 updateFromFrontend sessionId clientId msg model =
     case msg of
         NoOpToBackend ->
             ( model, Cmd.none )
+
+        ToBackendRequestGamePage gameName ->
+            let
+                cmd =
+                    Http.get
+                        { url = "http://ulm.illwinter.com/dom6/server/" ++ gameName ++ ".html"
+                        , expect =
+                            Http.expectString
+                                (BackendGotDom6Page clientId)
+                        }
+            in
+            ( model, cmd )

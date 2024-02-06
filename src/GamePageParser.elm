@@ -1,8 +1,9 @@
-module GamePageParser exposing (parsedGamePage, NationStatusRow)
+module GamePageParser exposing (parseGamePage)
 
 import Html.Parser exposing (runDocument)
 import Parser exposing (DeadEnd)
 import SamplePage exposing (rawSamplePage)
+import Types exposing (NationStatusRow)
 
 
 isElement : Html.Parser.Node -> Bool
@@ -139,7 +140,6 @@ getTextFromTd : Html.Parser.Node -> Maybe String
 getTextFromTd =
     getChildren >> List.head >> Maybe.andThen getTextContent
 
-type alias NationStatusRow = { name : String, value : String }
 
 parseTableRow : Html.Parser.Node -> Maybe NationStatusRow
 parseTableRow row =
@@ -169,9 +169,9 @@ parseTableRow row =
 
 {-| parsedGamePage : Result (List DeadEnd) Html.Parser.Document
 -}
-parsedGamePage : Maybe (List (NationStatusRow))
-parsedGamePage =
-    case runDocument rawSamplePage of
+parseGamePage : String -> Maybe (List NationStatusRow)
+parseGamePage rawPage =
+    case runDocument rawPage of
         Ok doc ->
             case doc.document of
                 ( attrs, nodes ) ->

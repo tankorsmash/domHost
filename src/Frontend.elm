@@ -1,10 +1,12 @@
 module Frontend exposing (..)
 
+import SamplePage
+
 import Browser exposing (UrlRequest(..))
 import Browser.Events exposing (onAnimationFrameDelta)
 import Browser.Navigation as Nav
 import Color
-import GamePageParser exposing (NationStatusRow, parsedGamePage)
+import GamePageParser exposing (parseGamePage)
 import Html exposing (Html, div)
 import Html.Attributes as HA exposing (class, style, value)
 import Html.Events as HE exposing (onInput)
@@ -37,6 +39,7 @@ init url key =
     ( { key = key
       , message = "Welcome to Lamdera! You're looking at the auto-generated base implementation. Check out src/Frontend.elm to start coding!"
       , gameName = "WhoNeedsJ"
+      , nationRows = []
       }
     , Cmd.none
     )
@@ -71,12 +74,15 @@ update msg model =
 
         SearchGameName ->
             ( model
-            , Http.get
-                { url = "http://localhost:8080/gameName"
-                , expect =
-                    Http.expectString
-                        GotDom6Page
-                }
+            ,
+            Lamdera.sendToBackend <|
+                ToBackendRequestGamePage model.gameName
+            -- , Http.get
+            --     { url = "http://ulm.illwinter.com/dom6/server/" ++ model.gameName ++ ".html"
+            --     , expect =
+            --         Http.expectString
+            --             GotDom6Page
+            --     }
             )
 
 
@@ -90,6 +96,9 @@ updateFromBackend msg model =
     case msg of
         NoOpToFrontend ->
             ( model, Cmd.none )
+
+        ToFrontendGotDom6Page pageResult ->
+            Debug.todo "branch 'ToFrontendGotDom6Page _' not implemented"
 
 
 renderNationRow : NationStatusRow -> Html msg
@@ -110,7 +119,7 @@ view model =
     -- else
     let
         maybeNationRows =
-            Debug.log "parsed from Frontend" parsedGamePage
+            Debug.log "parsed from Frontend" <| parseGamePage SamplePage.rawSamplePage
     in
     { title = ""
     , body =
