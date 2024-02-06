@@ -10,6 +10,7 @@ import Url exposing (Url)
 type alias NationStatusRow =
     { name : String, value : String }
 
+type alias  ParsedNationRows= List NationStatusRow
 
 type alias FrontendModel =
     { key : Key
@@ -49,4 +50,4 @@ type BackendMsg
 
 type ToFrontend
     = NoOpToFrontend
-    | ToFrontendGotDom6Page (Result Http.Error String)
+    | ToFrontendGotDom6Page (Result Http.Error (Maybe ParsedNationRows))

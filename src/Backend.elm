@@ -1,5 +1,6 @@
 module Backend exposing (..)
 
+import GamePageParser exposing (parseGamePage)
 import Html
 import Http
 import Lamdera exposing (ClientId, SessionId, sendToFrontend)
@@ -32,8 +33,22 @@ update msg model =
         NoOpBackendMsg ->
             ( model, Cmd.none )
 
-        BackendGotDom6Page  clientId result  ->
-            (model, sendToFrontend clientId<| ToFrontendGotDom6Page result)
+        BackendGotDom6Page clientId result ->
+            ( model, sendToFrontend clientId <| ToFrontendGotDom6Page (Result.map parseGamePage result) )
+
+
+
+-- BackendGotDom6Page  clientId result  ->
+--     case result of
+--         Ok maybeRows ->
+--             let
+--                 parsedPage =
+--                     parseGamePage maybeRows
+--             in
+--             ( model, sendToFrontend clientId<| ToFrontendGotDom6Page parsedPage )
+--         Err err ->
+--             -- ( model, sendToFrontend clientId<| ToFrontendGotDom6PageParseError err )
+--             ( model, Cmd.none )
 
 
 updateFromFrontend : SessionId -> ClientId -> ToBackend -> Model -> ( Model, Cmd BackendMsg )
