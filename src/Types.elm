@@ -31,7 +31,6 @@ type FrontendMsg
     | NoOpFrontendMsg
     | ChangedGameName String
     | SearchGameName
-    | GotDom6Page (Result Http.Error String)
 
 
 

@@ -65,9 +65,6 @@ update msg model =
         NoOpFrontendMsg ->
             ( model, Cmd.none )
 
-        GotDom6Page text ->
-            ( model, Cmd.none )
-
         ChangedGameName newGameName ->
             ( { model | gameName = Debug.log "newgamename" newGameName }, Cmd.none )
 
